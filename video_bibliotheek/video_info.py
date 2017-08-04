@@ -85,7 +85,7 @@ class AudioStreamInfo(StreamInfo):
         self.bit_rate = round(int(bit_rate.split()[0]) / 1000) if bit_rate else -1
 
     def __repr__(self):
-        return f'<AudioStreamInfo({self.codec_name}, {self.channels}ch, {self.channel_layout}, {self.bit_rate}kb/s)>'
+        return f'<AudioStreamInfo({self.lang}, {self.codec_name}, {self.channels}ch, {self.channel_layout}, {self.bit_rate}kb/s)>'
 
 
 class SubtitleStreamInfo(StreamInfo):
