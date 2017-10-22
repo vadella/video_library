@@ -1,0 +1,25 @@
+package:
+  name: video_bibliotheek
+  version: 0.1
+
+source:
+  path: .
+build:
+  noarch: python
+  script: python setup.py install --single-version-externally-managed --record record.txt
+#  script: python setup.py install
+
+requirements:
+  build:
+    - setuptools
+    - python
+  run:
+    - python >=3.6
+    - ffmpeg
+test:
+  imports:
+    - video_bibliotheek
+about:
+  home: https://github.com/vadella/video_library
+extra:
+  final: true

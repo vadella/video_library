@@ -1,0 +1,16 @@
+package:
+  name: video_bibliotheek
+  version: 0.1
+
+source:
+  git: https://github.com/vadella/video_library
+
+requirements:
+  build:
+    - python
+  run:
+    - python > 3.6
+    - ffmpeg
+
+about:
+  home: https://github.com/vadella/video_library
