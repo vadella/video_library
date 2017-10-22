@@ -3,11 +3,13 @@ package:
   version: 0.1
 
 source:
-  path: .
+  git_url: https://github.com/vadella/video_library
+  git_tag: test_tag
+
 build:
-  noarch: python
   script: python setup.py install --single-version-externally-managed --record record.txt
-#  script: python setup.py install
+  number: 1
+  include_recipe: False
 
 requirements:
   build:
@@ -16,10 +18,13 @@ requirements:
   run:
     - python >=3.6
     - ffmpeg
+
 test:
   imports:
     - video_bibliotheek
+
 about:
   home: https://github.com/vadella/video_library
+
 extra:
   final: true
