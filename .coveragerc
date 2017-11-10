@@ -1,0 +1,16 @@
+[paths]
+source =
+   src/video_library
+   */site-packages/video_library
+
+[run]
+branch = true
+source =
+    video_library
+    tests
+parallel = true
+
+[report]
+show_missing = true
+precision = 2
+omit = *migrations*

@@ -1,51 +1,83 @@
-import sys
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import print_function
 
-try:
-    from setuptools import setup
-except ImportError:
-    print('Please install or upgrade setuptools or pip to continue')
-    sys.exit(1)
+import io
+import re
+from glob import glob
+from os.path import basename
+from os.path import dirname
+from os.path import join
+from os.path import splitext
 
-long_description = """test description"""
-__doc__ = long_description
+from setuptools import find_packages
+from setuptools import setup
+
+
+def read(*names, **kwargs):
+    return io.open(
+        join(dirname(__file__), *names),
+        encoding=kwargs.get('encoding', 'utf8')
+    ).read()
+
 
 setup(
-    name='video_bibliotheek',
-    version='0.1',
+    name='video-library',
+    version='0.1.0',
+    license='Apache Software License 2.0',
     description='parse info from mkv files',
-    long_description=long_description,
-    keywords='mkv info',
+    long_description='%s\n%s' % (
+        re.compile('^.. start-badges.*^.. end-badges', re.M | re.S).sub('', read('README.rst')),
+        re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))
+    ),
     author='Maarten Fabré',
     author_email='maartenfabre@gmail.com',
     url='https://github.com/vadella/video_library',
-    # test_suite='pint.testsuite.testsuite',
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
+    py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
+    include_package_data=True,
     zip_safe=False,
-    packages=['video_bibliotheek'],
-    # package_data={
-    #     'pint': ['default_en.txt',
-    #              'constants_en.txt']
-    # },
-    platforms='any',
-    include_package_data=False,
-    license='BSD',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        # complete classifier list: http://pypi.python.org/pypi?%3Aaction=list_classifiers
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
-        'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: BSD License',
-        'Operating System :: MacOS :: MacOS X',
-        'Operating System :: Microsoft :: Windows',
+        'License :: OSI Approved :: Apache Software License',
+        'Operating System :: Unix',
         'Operating System :: POSIX',
+        'Operating System :: Microsoft :: Windows',
         'Programming Language :: Python',
-        # 'Topic :: Scientific/Engineering',
-        # 'Topic :: Software Development :: Libraries',
-        # 'Programming Language :: Python :: 2.7',
-        # 'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
+        # uncomment if you test on these interpreters:
+        # 'Programming Language :: Python :: Implementation :: IronPython',
+        # 'Programming Language :: Python :: Implementation :: Jython',
+        # 'Programming Language :: Python :: Implementation :: Stackless',
+        'Topic :: Utilities',
+    ],
+    keywords=[
+        # eg: 'keyword1', 'keyword2', 'keyword3',
+    ],
+    install_requires=[
+		ffmpeg,
+        # eg: 'aspectlib==1.1.1', 'six>=1.7',
     ],
     extras_require={
-        'db': ['sqlalchemy'],
-    }
-
-
+		'db': ['sqlalchemy'],
+        # eg:
+        #   'rst': ['docutils>=0.11'],
+        #   ':python_version=="2.6"': ['argparse'],
+    },
+    entry_points={
+        'console_scripts': [
+            'video-library = video_library.cli:main',
+        ]
+    },
 )
