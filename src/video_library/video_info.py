@@ -4,13 +4,19 @@ import subprocess
 import collections
 
 import datetime
+import pathlib
 
 
 class MkvFile:
-    def __init__(self, filename, parsers=None):
+    def __init__(self, filename: pathlib.Path, parsers=None):
         self.filename = filename
 
-        file_info_json = json.loads(probe_file_json(str(filename)))
+        info = probe_file_json(str(filename))
+        if info['succes']:
+            file_info_json = json.loads(info['output'])
+        else:
+            print(info['error'])
+            return
 
         format_info = file_info_json['format']
         format_labels = ['duration', 'size', 'nb_streams', 'format_name']
@@ -132,5 +138,5 @@ def probe_file_json(filename):
         # '-unit',
         filename,
     ]
-
-    return subprocess.check_output(cmd)
+    result = subprocess.run(cmd)
+    return{'succes': not bool(result.returncode), 'output': result.stdout, 'error': result.stdout}
