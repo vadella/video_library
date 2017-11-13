@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Time, Float, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-from video_bibliotheek.video_info import VideoStreamInfo, StreamInfo, AudioStreamInfo, SubtitleStreamInfo, MkvFile
+from video_library.video_info import VideoStreamInfo, StreamInfo, AudioStreamInfo, SubtitleStreamInfo, MkvFile
 
 Base = declarative_base()
 
