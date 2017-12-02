@@ -29,25 +29,39 @@ class MkvFile:
             def parse_streams(streams: dict):
                 # print(streams)
                 default_parsers = {'subtitle': SubtitleStreamInfo, 'video': VideoStreamInfo, 'audio': AudioStreamInfo}
-                default_parsers.update(parsers)
+                if parsers:
+                    default_parsers.update(parsers)
 
                 for stream in streams:
                     typ = stream['codec_type']
                     # print(stream)
-                    yield typ, parsers[typ](stream)
+                    yield typ, default_parsers[typ](stream)
 
             result = collections.OrderedDict([(typ, []) for typ in ('video', 'audio', 'subtitle')])
             for typ, stream_info_parsed in parse_streams(stream_info):
                 result[typ].append(stream_info_parsed)
             return result
 
-        stream_info = _parse_stream_info(file_info_json['streams'])
-        self.video = stream_info.get("video", ())
-        self.audio = stream_info.get("audio", ())
-        self.subtitle = stream_info.get("subtitle", ())
+        # stream_info =
+        # self.video = stream_info.get("video", ())
+        # self.audio = stream_info.get("audio", ())
+        # self.subtitle = stream_info.get("subtitle", ())
 
         self._format_info = file_info_json['format']
-        self._stream_info = file_info_json['streams']
+        self._stream_info = _parse_stream_info(file_info_json['streams'])
+        self._stream_raw_info = file_info_json['streams']
+
+    @property
+    def video(self):
+        return self._stream_info.get("video", ())
+
+    @property
+    def audio(self):
+        return self._stream_info.get("audio", ())
+
+    @property
+    def subtitle(self):
+        return self._stream_info.get("subtitle", ())
 
     def __repr__(self):
         video_info = f'{self.duration}, {self.size} GB, {[repr(info) for info in self.video]}'
@@ -77,6 +91,10 @@ class VideoStreamInfo(StreamInfo):
         super(VideoStreamInfo, self).__init__(stream_info)
         self.width = stream_info.get('width', None)
         self.height = stream_info.get('height', None)
+
+    @property
+    def resolution(self):
+        return f'{self.width} x {self.height}'
 
     def __repr__(self):
         return f'<VideoStreamInfo({self.codec_name}, ({self.width} x {self.height}))>'
@@ -138,5 +156,5 @@ def probe_file_json(filename):
         # '-unit',
         filename,
     ]
-    result = subprocess.run(cmd)
-    return{'succes': not bool(result.returncode), 'output': result.stdout, 'error': result.stdout}
+    result = subprocess.run(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    return {'succes': not bool(result.returncode), 'output': result.stdout, 'error': result.stderr}

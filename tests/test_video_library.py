@@ -8,7 +8,8 @@ def test_main():
 def test_video_info():
     data_dir = Path('test_data')
     for file in data_dir.glob('*.mkv'):
-        print(video_info.probe_file_json(str(file)))
+        print(file)
+        print(file, video_info.probe_file_json(str(file)))
 
 if __name__ == '__main__':
     test_video_info()
